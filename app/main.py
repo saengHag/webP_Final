@@ -80,6 +80,7 @@ def news_crawler():
         # 날짜 추출
         datetime_str = soup.select_one('li.date').get_text()
         datetime_str = datetime_str[3:]
+        # datetime_str의 문자열에 '승인' 글씨를 제거하고 날짜만 남기기 위해 앞의 3개의 문자를 제거함
 
         # datetime 값을 파싱
         dt = datetime.strptime(datetime_str, '%Y.%m.%d %H:%M')

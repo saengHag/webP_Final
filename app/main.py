@@ -71,11 +71,22 @@ def news_crawler():
         soup = BeautifulSoup(d_response, 'html.parser')
         
         # 제목 추출
-        news_title = soup.select_one('font.headline-title')
+        news_title = soup.select_one('font.headline-title').text
+        # 제목 텍스트만 출력하기 위해 .text를 사용함
 
         # 기사 본문 추출
-        news_d = soup.select('div.cont-body')
+        # news_d = soup.select('div.cont-body')
         # 본문의 텍스트만 출력하고 싶은데 html의 태그까지 출력됨. 해결방안을 찾아야 할 듯
+        news_d = soup.select('div.cont-body > p')
+        # div 클래스가 cont-body인 부분 중에서 태그가 p인 것만 추출. 근데 태그까지 출력됨. 쉽지않음
+        # news_d의 타입이 list인데 이걸 이용하면 어케 해결할 수 있지 않을까 싶음. news_d의 각 인덱스에 담긴 string의 앞과 뒤를 지워주면 태그가 제거될 것 같음!
+        i = 0
+        ns = []
+        while i < len(news_d):
+            ns.append(news_d[i].text.replace(u'\xa0', u' '))
+            i = i + 1
+        # 진짜 다 좋은데 \xa0 이거 뭔데 공백이 왜 이걸로;;
+        # 비 공백 공간 문자라고 함. 위에 문제 고치려고 replace(u'\xa0', u' ')를 사용함! 
 
         # 날짜 추출
         datetime_str = soup.select_one('li.date').get_text()
@@ -93,7 +104,7 @@ def news_crawler():
 
         print(news_title)
         print(formatted_time)
-        print(news_d)
+        print(ns)
         print("")
         
 

@@ -104,7 +104,8 @@ def news_crawler():
 
         print(news_title)
         print(formatted_time)
-        print(ns)
+        for i in ns:
+            print(i)
         print("")
         
 

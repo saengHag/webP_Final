@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup       # 웹에서 가져온 HTML코드를 파이썬에서 편하게 분석해주는 라이브러리
 import re
 from datetime import datetime, timedelta
+from jinja2 import Environment, FileSystemLoader
 
 """
 def google_news_crawler(query):
@@ -55,7 +56,7 @@ if __name__ == "__main__":
     google_news_crawler(query)
 
 """
-
+"""
 def news_crawler():
     # 구글 뉴스 검색 URL
     url = "https://www.gamevu.co.kr/news/articleView.html?idxno=32810"
@@ -114,5 +115,25 @@ def news_crawler():
 
 if __name__ == "__main__":
     news_crawler()
+"""
 
 
+# 템플릿 파일이 있는 디렉토리 설정
+file_loader = FileSystemLoader('C:/Users/dlgkr/webProgramming/webP_Final/htmls')
+env = Environment(loader=file_loader)
+
+# 템플릿 파일 로드
+template = env.get_template('template.html')
+
+# 템플릿에 전달할 데이터
+data = {
+    'title': 'Jinja2 예제',
+    'heading': 'Jinja2 템플릿 엔진',
+    'content': '이것은 Jinja2 템플릿 엔진을 사용하는 예제입니다.'
+}
+
+# 템플릿 렌더링
+output = template.render(data)
+
+# 렌더링된 템플릿 출력
+print(output)

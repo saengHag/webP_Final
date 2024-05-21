@@ -2,7 +2,8 @@ import requests
 from bs4 import BeautifulSoup       # 웹에서 가져온 HTML코드를 파이썬에서 편하게 분석해주는 라이브러리
 import re
 from datetime import datetime, timedelta
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader    # 진자2 학습용. 어떤 식으로 사용하는지 확인하고 주석처리할 예정
+from fastapi.templating import Jinja2Templates
 
 """
 def google_news_crawler(query):

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <title>게임 스크랩 사이트</title>
+    <style>
+        h1 {
+            font-family: arial;
+            font-size: 36px;
+            margin: 25px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box">
+            <h1>{{keyword}} 관련 최신 기사</h1>
+        </div>
+    </div>
+    <p>제목: {{ title }}</p>
+    <p>언론사: {{ press }}</p>
+    <p>작성일자: {{ date }}</p>
+    <ul>
+        <li>
+            <a href="{{ link }}" target="_blank">{{ title }}</a><br>
+            <!--"_blank": 새 탭에서 링크 열기-->
+            <!--Request URL: {{ request }}-->
+            <!--{{ press }} - {{ date }}-->
+        </li>
+    </ul>
+</body>
+</html>

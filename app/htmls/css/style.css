@@ -1,0 +1,13 @@
+.container {
+    font-family: arial;
+    font-size: 24px;
+    margin: 25px;
+    width: 350px;
+    height: 200px;
+    outline: dashed 1px black;
+}
+  
+h1 {
+    /* 수평 중앙 정렬하기 */
+    text-align: center;
+}

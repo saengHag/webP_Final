@@ -1,16 +1,18 @@
 from typing import Union
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.encoders import jsonable_encoder
 import requests
 import re
 from datetime import datetime, timedelta
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from bs4 import BeautifulSoup       # 웹에서 가져온 HTML코드를 파이썬에서 편하게 분석해주는 라이브러리
-# import time
 
 app = FastAPI()
 
-def whole_google_news_crawler(keyword):
+templates = Jinja2Templates(directory = "app/htmls")        #'htmls' 디렉토리 내의 html 코드를 참조
+
+def google_news_crawler(keyword):
     # 구글 뉴스 검색 URL
     url = "https://news.google.com/search?q={}&hl=ko&gl=KR&ceid=KR%3Ako".format(keyword)      # URL 내에 query 변수명을 그대로 입력했더니 'query'라는 문자열을 검색한 결과가 나옴. 전에는 멀쩡했는데 왜 이러는지 모르겠음
 
@@ -109,10 +111,9 @@ def whole_google_news_crawler(keyword):
             
     else:
         print("HTTP 요청 실패")
-    
+
     return ( press, title, formatted_time, "https://news.google.com"+link )
 # press, title, formatted_time, "https://news.google.com"+link
-
 
 @app.get("/")
 def root():
@@ -122,12 +123,14 @@ def root():
 def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
 
-@app.get("/search/{keyword}")
-def print_news(keyword: str):
+@app.get("/search/{keyword}", response_class=HTMLResponse)
+def print_news(keyword: str, request: Request):
     #press, title, time, link = whole_google_news_crawler(keyword)
     #return { "press": press, "title": title, "formatted_time": time, "link": link }
-    press, title, time, link = whole_google_news_crawler(keyword)
-    #print(press, title, time)
-    return {"언론사": press, "제목": title, "작성일자": time, "링크": link }
-# press, title, time, link
+    press, title, date, link = google_news_crawler(keyword)
+    #return { "언론사": press, "제목": title, "작성일자": time, "링크": link }   # press, title, time, link
+    return templates.TemplateResponse("news.html", { "request": request, "keyword": keyword, "press": press, "title": title, "date": date, "link": link })
 # "언론사": press, "제목": title, "작성일자": time, "링크": link
+
+#@app.get("/search/{keyword}/show")
+#def show_one_news():

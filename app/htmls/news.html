@@ -1,27 +1,33 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <title>게임 스크랩 사이트</title>
+    <title>{{keyword}} 관련 최신 기사</title>
     <style>
         h1 {
             font-family: arial;
             font-size: 36px;
-            margin: 25px;
+            margin: 40px;
             text-align: center;
+        }
+        press {
+            width: 50px;
+            height: 180px;
+            background-color: rgb(105, 153, 230);
+            margin: 0 auto;
+        }
+        date {
+            background-color: lightcoral;
+            margin: 0 auto;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="box">
-            <h1>{{keyword}} 관련 최신 기사</h1>
-        </div>
-    </div>
-    <p>제목: {{ title }}</p>
-    <p>언론사: {{ press }}</p>
-    <p>작성일자: {{ date }}</p>
+    <h1>{{ title }}</h1><br>
+    <press>언론사: {{ press }}</press><br><br>
+    <date>작성일자: {{ date }}</date>
     <ul>
         <li>
+            <a>기사 원본으로 이동하기: </a>
             <a href="{{ link }}" target="_blank">{{ title }}</a><br>
             <!--"_blank": 새 탭에서 링크 열기-->
             <!--Request URL: {{ request }}-->

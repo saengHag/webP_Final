@@ -13,26 +13,49 @@
             width: 50px;
             height: 180px;
             background-color: rgb(105, 153, 230);
-            margin: 0 auto;
+            margin-top: 40px;
+            margin-bottom: 40px;
         }
         date {
             background-color: lightcoral;
-            margin: 0 auto;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+        ul {
+            list-style-type: disc;
+        }
+        .article-container {
+            width: 1080px;
+            margin-top: 80px;
+            margin-left: auto;
+            margin-right: auto;
         }
     </style>
 </head>
 <body>
-    <h1>{{ title }}</h1><br>
-    <press>언론사: {{ press }}</press><br><br>
-    <date>작성일자: {{ date }}</date>
+    <div id="header">
+        <div id="search-area" class="search-area">
+            <a id="input-logo">
+                <img src="{{ url_for('static', path='icon/happycat_mini.png') }}" alt="happycat">
+                <sitename>GameNews</sitename>
+            </a>
+        </div>
+    </div>
+    <div class="article-container">
+        <h1>{{ title }}</h1><br>
+        <press>언론사: {{ press }}</press><br><br>
+        <date>작성일자: {{ date }}</date>
+    </div>
     <ul>
-        <li>
-            <a>기사 원본으로 이동하기: </a>
-            <a href="{{ link }}" target="_blank">{{ title }}</a><br>
-            <!--"_blank": 새 탭에서 링크 열기-->
-            <!--Request URL: {{ request }}-->
-            <!--{{ press }} - {{ date }}-->
-        </li>
+        <div class="article-container">
+            <li>
+                <a>기사 원본으로 이동하기: </a>
+                <a href="{{ link }}" target="_blank">{{ title }}</a><br>
+                <!--"_blank": 새 탭에서 링크 열기-->
+                <!--Request URL: {{ request }}-->
+                <!--{{ press }} - {{ date }}-->
+            </li>
+        </div>
     </ul>
 </body>
 </html>

@@ -1,14 +1,17 @@
 from typing import Union
 from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
 from fastapi.encoders import jsonable_encoder
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 import requests
 import re
 from datetime import datetime, timedelta
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
 from bs4 import BeautifulSoup       # 웹에서 가져온 HTML코드를 파이썬에서 편하게 분석해주는 라이브러리
 
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="app"), name="static")
 
 templates = Jinja2Templates(directory = "app/htmls")        #'htmls' 디렉토리 내의 html 코드를 참조
 
@@ -123,6 +126,10 @@ def root():
 def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
 
+@app.post("/search")
+def get_keyword():
+    return {"message":"Search whatever you want"}
+
 @app.get("/search/{keyword}", response_class=HTMLResponse)
 def print_news(keyword: str, request: Request):
     #press, title, time, link = whole_google_news_crawler(keyword)
@@ -131,6 +138,3 @@ def print_news(keyword: str, request: Request):
     #return { "언론사": press, "제목": title, "작성일자": time, "링크": link }   # press, title, time, link
     return templates.TemplateResponse("news.html", { "request": request, "keyword": keyword, "press": press, "title": title, "date": date, "link": link })
 # "언론사": press, "제목": title, "작성일자": time, "링크": link
-
-#@app.get("/search/{keyword}/show")
-#def show_one_news():

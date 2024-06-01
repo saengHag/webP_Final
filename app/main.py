@@ -62,8 +62,8 @@ def google_news_crawler(keyword):
             i = 0
             ns = []
             while i < len(news_main):
-                if news_main[i] :
-                    ns.append(str(news_main[i].text.replace(u'\xa0', u' ')))
+                if title in news_main[i] :
+                    ns.append(str(news_main[i].text.replace(u'\xa0', u' ')).replace('\n', '<br>').replace('\r', ''))
                 i = i + 1
 
         """

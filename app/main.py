@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup       # 웹에서 가져온 HTML코드를 파이�
 
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="app"), name="static")
+app.mount("/static", StaticFiles(directory="app"), name="static")       # 이미지 출력을 원활하게 하기 위한 명령어. app 디렉토리 안에서 탐색
 
 templates = Jinja2Templates(directory = "app/htmls")        #'htmls' 디렉토리 내의 html 코드를 참조
 
@@ -47,6 +47,24 @@ def google_news_crawler(keyword):
         # 링크 추출
         link = soup.select_one('a.JtKRv')['href']
         link = link.lstrip('.')
+
+        # 본문 링크를 새 변수에 저장
+        article_url = "https://news.google.com" + link
+
+        # 본문 크롤링을 위해 HTTP 요청 보내기
+        response_2 = requests.get(article_url)
+
+        if response_2.status_code == 200:
+            soup2 = BeautifulSoup(response_2.text, 'html.parser')
+
+            # 기사 전문 추출
+            news_main = soup2.select('div')
+            i = 0
+            ns = []
+            while i < len(news_main):
+                if news_main[i] :
+                    ns.append(str(news_main[i].text.replace(u'\xa0', u' ')))
+                i = i + 1
 
         """
         # 뉴스 제목과 링크 가져오기
@@ -115,7 +133,7 @@ def google_news_crawler(keyword):
     else:
         print("HTTP 요청 실패")
 
-    return ( press, title, formatted_time, "https://news.google.com"+link )
+    return ( press, title, formatted_time, "https://news.google.com"+link, ns )
 # press, title, formatted_time, "https://news.google.com"+link
 
 @app.get("/")
@@ -134,7 +152,7 @@ def get_keyword():
 def print_news(keyword: str, request: Request):
     #press, title, time, link = whole_google_news_crawler(keyword)
     #return { "press": press, "title": title, "formatted_time": time, "link": link }
-    press, title, date, link = google_news_crawler(keyword)
+    press, title, date, link, detail = google_news_crawler(keyword)
     #return { "언론사": press, "제목": title, "작성일자": time, "링크": link }   # press, title, time, link
-    return templates.TemplateResponse("news.html", { "request": request, "keyword": keyword, "press": press, "title": title, "date": date, "link": link })
+    return templates.TemplateResponse("news.html", { "request": request, "keyword": keyword, "press": press, "title": title, "date": date, "link": link, "detail": detail })
 # "언론사": press, "제목": title, "작성일자": time, "링크": link

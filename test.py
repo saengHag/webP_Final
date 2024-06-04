@@ -8,12 +8,6 @@ import requests
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup, Comment       # 웹에서 가져온 HTML코드를 파이썬에서 편하게 분석해주는 라이브러리
 
-app = FastAPI()
-
-app.mount("/static", StaticFiles(directory="app"), name="static")       # 이미지 출력을 원활하게 하기 위한 명령어. app 디렉토리 안에서 탐색
-
-templates = Jinja2Templates(directory = "app/htmls")        #'htmls' 디렉토리 내의 html 코드를 참조
-
 def google_news_crawler(keyword):
     # 구글 뉴스 검색 URL
     url = "https://news.google.com/search?q={}&hl=ko&gl=KR&ceid=KR%3Ako".format(keyword)      # URL 내에 query 변수명을 그대로 입력했더니 'query'라는 문자열을 검색한 결과가 나옴. 전에는 멀쩡했는데 왜 이러는지 모르겠음
@@ -54,10 +48,12 @@ def google_news_crawler(keyword):
         # 본문 크롤링을 위해 HTTP 요청 보내기
         response_2 = requests.get(article_url)
         response_2.encoding = 'utf-8'
-        
+
         # 본문 html을 스크랩하는 과정에서 데이터의 크기를 줄이기 위해 웹사이트에 남아있는 html 주석을 제거하는 함수
         if response_2.status_code == 200:
             soup2 = BeautifulSoup(response_2.text, 'html.parser')
+
+            
             def remove_comments(soup2):
                 for element in soup(text=lambda text: isinstance(text, Comment)):
                     element.extract()
@@ -74,12 +70,6 @@ def google_news_crawler(keyword):
                     break
                 news_main = soup2.select(i)
             print(news_main)
-            
-            news_main_text = []
-            for i in range(len(news_main)):
-                news_main_text.append(news_main[i].get_text(separator = ' ', strip = True))
-
-            print(news_main_text)
 
             #ns = str(rmv_tag.text.replace(u'\xa0', u' ')).replace('\n', '<br>').replace('\r', '').replace("\'", "").replace("=", "").replace("광고", "")
             #   print(type(ns[0]))      # ns의 타입 확인: str
@@ -157,22 +147,6 @@ def google_news_crawler(keyword):
     else:
         print("HTTP 요청 실패")
 
-    return ( press, title, formatted_time, "https://news.google.com"+link, news_main_text )       
-# press, title, formatted_time, "https://news.google.com"+link
+    return ( press, title, formatted_time, "https://news.google.com"+link, news_main )
 
-@app.get("/")
-def root():
-    return {"message":"Hello World"}
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
-
-@app.get("/search/{keyword}", response_class=HTMLResponse)
-def print_news(keyword: str, request: Request):
-    #press, title, time, link = whole_google_news_crawler(keyword)
-    #return { "press": press, "title": title, "formatted_time": time, "link": link }
-    press, title, date, link, detail = google_news_crawler(keyword)
-    #return { "언론사": press, "제목": title, "작성일자": time, "링크": link }   # press, title, time, link
-    return templates.TemplateResponse("news.html", { "request": request, "keyword": keyword, "press": press, "title": title, "date": date, "link": link, "detail": detail })
-# "언론사": press, "제목": title, "작성일자": time, "링크": link
+google_news_crawler('리그오브레전드')

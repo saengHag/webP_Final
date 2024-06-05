@@ -78,7 +78,9 @@
             -webkit-text-stroke-color: rgb(52, 120, 128);
         }
         #search-area {
+            margin-top: 40px;
             margin-left: 100px;
+            margin-bottom: 40px;
         }
         #search-box {
             height: 30px;
@@ -134,28 +136,22 @@
             <sitename>GameNews</sitename>
         </logo-box>
     </div>
-    <div class="article-container">
-        <div id="body">
-            <div id="body-top">
-                <press>{{ press }}</press>
-                <h2>{{ title }}</h2>
-                <date>작성일자: {{ date }}</date>
-            </div>
-            <hr style="border: solid 1px rgb(52, 120, 128);">
-            <div id="body-middle">
-                {{ detail | safe }}
-            </div>
-            <div id="body-bottom">
-                <li>
-                    <a>기사 원문으로 이동: </a>
-                    <a href="{{ link }}" target="_blank">{{ title }}</a><br>
-                    <!--"_blank": 새 탭에서 링크 열기-->
-                    <!--Request URL: {{ request }}-->
-                    <!--{{ press }} - {{ date }}-->
-                    <a href="/search">검색창으로 이동</a>
-                </li>
-            </div>
-        </div>
+    <div id="search-area">
+        <form id="search-box" action="/search/result" method="post">
+            <input id="search-txt" type="text" name="keyword" placeholder="검색어를 입력하세요.">
+            <button id="search-btn" type="submit">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+        <script>
+            function validateForm() {
+                var keyword = document.getElementById("search-txt").value;
+                if (keyword.trim() === "") {
+                    alert("검색어를 입력해주세요.");
+                    return false;
+                }
+                return true;
+            }
+        </script>
     </div>
 </body>
-</html>

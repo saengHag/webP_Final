@@ -1,5 +1,5 @@
 from typing import Union
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form
 from fastapi.staticfiles import StaticFiles
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import HTMLResponse
@@ -97,11 +97,9 @@ def google_news_crawler(keyword):
 
             # 텍스트 확인용 코드
             #print(news_main_text)
-            print(final_news_detail)        # 뉴스 기사 웹사이트를 그대로 크롤링하면 아래의 필요없는 부분까지 출력되는 이슈가 있었는데 보통 뉴스 기사의 끝에는 이메일이 온다는 특징을 이용했다
+            #print(final_news_detail)        # 뉴스 기사 웹사이트를 그대로 크롤링하면 아래의 필요없는 부분까지 출력되는 이슈가 있었는데 보통 뉴스 기사의 끝에는 이메일이 온다는 특징을 이용했다
             print(news_detail_text_real_final_last)     #'@'기호를 기준으로 문자열을 자르고, 그 앞의 '.'기호를 기준으로 잘라서 이메일을 완전히 제거하는 것으로 깔끔한 본문을 가져옴
             
-            
-
             #ns = str(rmv_tag.text.replace(u'\xa0', u' ')).replace('\n', '<br>').replace('\r', '').replace("\'", "").replace("=", "").replace("광고", "")
             #   print(type(ns[0]))      # ns의 타입 확인: str
             """
@@ -111,8 +109,6 @@ def google_news_crawler(keyword):
             if '#' in n_detail[2]:
                 Final_detail = n_detail[2].split('#')
             """
-        
-            
     else:
         print("HTTP 요청 실패")
 
@@ -127,20 +123,18 @@ def root():
 def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
 
-@app.get("/get_keyword")
-def throw_keyword_next(request: Request, keyword: str):
-    if keyword:
-        redirect_url = f"localhost:8080/search/{keyword}"
-        return RedirectResponse(url=redirect_url)
+@app.get("/search", response_class=HTMLResponse)
+def input_keyword(request: Request):
+    return templates.TemplateResponse("search.html", {"request": request})
 
-@app.get("/search/{keyword}", response_class=HTMLResponse)
-def print_news(keyword: str, request: Request):
-    #press, title, time, link = whole_google_news_crawler(keyword)
-    #return { "press": press, "title": title, "formatted_time": time, "link": link }
+@app.post("/search/result", response_class=HTMLResponse)
+def print_news(request: Request, keyword: str = Form(...)):
+    print(keyword)
     press, title, date, link, detail = google_news_crawler(keyword)
-    #return { "언론사": press, "제목": title, "작성일자": time, "링크": link }   # press, title, time, link
     return templates.TemplateResponse("news.html", { "request": request, "keyword": keyword, "press": press, "title": title, "date": date, "link": link, "detail": detail })
 # "언론사": press, "제목": title, "작성일자": time, "링크": link
+
+
 
 """
         # 뉴스 제목과 링크 가져오기

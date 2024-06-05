@@ -111,7 +111,38 @@ def google_news_crawler(keyword):
             if '#' in n_detail[2]:
                 Final_detail = n_detail[2].split('#')
             """
-        """
+        
+            
+    else:
+        print("HTTP 요청 실패")
+
+    return ( press, title, formatted_time, "https://news.google.com"+link, news_detail_text_real_final_last )      
+# press, title, formatted_time, "https://news.google.com"+link
+
+@app.get("/")
+def root():
+    return {"message":"Hello World"}
+
+@app.get("/items/{item_id}")
+def read_item(item_id: int, q: Union[str, None] = None):
+    return {"item_id": item_id, "q": q}
+
+@app.get("/get_keyword")
+def throw_keyword_next(request: Request, keyword: str):
+    if keyword:
+        redirect_url = f"localhost:8080/search/{keyword}"
+        return RedirectResponse(url=redirect_url)
+
+@app.get("/search/{keyword}", response_class=HTMLResponse)
+def print_news(keyword: str, request: Request):
+    #press, title, time, link = whole_google_news_crawler(keyword)
+    #return { "press": press, "title": title, "formatted_time": time, "link": link }
+    press, title, date, link, detail = google_news_crawler(keyword)
+    #return { "언론사": press, "제목": title, "작성일자": time, "링크": link }   # press, title, time, link
+    return templates.TemplateResponse("news.html", { "request": request, "keyword": keyword, "press": press, "title": title, "date": date, "link": link, "detail": detail })
+# "언론사": press, "제목": title, "작성일자": time, "링크": link
+
+"""
         # 뉴스 제목과 링크 가져오기
         allNews = soup.select('c-wiz.XBspb')
         
@@ -138,8 +169,8 @@ def google_news_crawler(keyword):
         link = link.lstrip('.')
 
         # time.sleep(10)
-        """
-        """
+"""
+"""
         a = 0
         for news in allNews:
             if a > 5:
@@ -173,27 +204,4 @@ def google_news_crawler(keyword):
             print(formatted_time)
             print("https://news.google.com"+link)
             print("")
-            """
-            
-    else:
-        print("HTTP 요청 실패")
-
-    return ( press, title, formatted_time, "https://news.google.com"+link, news_detail_text_real_final_last )      
-# press, title, formatted_time, "https://news.google.com"+link
-
-@app.get("/")
-def root():
-    return {"message":"Hello World"}
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
-
-@app.get("/search/{keyword}", response_class=HTMLResponse)
-def print_news(keyword: str, request: Request):
-    #press, title, time, link = whole_google_news_crawler(keyword)
-    #return { "press": press, "title": title, "formatted_time": time, "link": link }
-    press, title, date, link, detail = google_news_crawler(keyword)
-    #return { "언론사": press, "제목": title, "작성일자": time, "링크": link }   # press, title, time, link
-    return templates.TemplateResponse("news.html", { "request": request, "keyword": keyword, "press": press, "title": title, "date": date, "link": link, "detail": detail })
-# "언론사": press, "제목": title, "작성일자": time, "링크": link
+"""

@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="utf-8">
-    <title>{{keyword}}에 대한 모든 것 - GameNews</title>
+    <title>About {{keyword}} - GameNews</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
@@ -13,6 +13,10 @@
     <!--Noto Sans 폰트 추가-->
     <link rel="icon" href="{{ url_for('static', path='icon/happycat_mini.png') }}"/>
     <script src="https://kit.fontawesome.com/bd74f4ff71.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <!--Lato 폰트 추가-->
     <style>
         body {
             margin: 0;
@@ -56,11 +60,21 @@
             text-align: left;
         }
         .article-container {
-            width: 960px;
+            width: 930px;
+            float: left;
             margin-top: 60px;
             margin-bottom: 60px;
             margin-left: 100px;
             text-align: left;
+        }
+        .right_aside {
+            padding: 20px;
+            width: 240px;
+            height: 270px;
+            float: right;
+            margin-top: 200px;
+            margin-right: 80px;
+            background-color: rgb(52, 120, 128);
         }
         #header {
             background-color: rgb(247, 247, 247);
@@ -73,7 +87,7 @@
         }
         #logo-box {
             font-family: "Black Han Sans", sans-serif;
-            color: rgb(89, 147, 154);
+            color: rgb(113, 164, 170);
             -webkit-text-stroke-width: 2px;
             -webkit-text-stroke-color: rgb(52, 120, 128);
         }
@@ -82,10 +96,11 @@
         }
         #search-box {
             height: 30px;
-            width: 300px;
+            width: 204px;
             background: rgb(247, 247, 247);
-            border-radius: 40px;
+            border-radius: 10px;
             padding: 10px;
+            margin-bottom: 40px;
             border: 1px solid rgb(52, 120, 128);
         }
         #search-txt {
@@ -94,12 +109,11 @@
             outline: none;
             float: left;
             padding: 0px;
-            margin-top: 2px;
             margin-left: 5px;
             color: rgb(160, 160, 160);
             font-size: 16px;
             line-height: 30px;
-            width: 200px;
+            width: 130px;
         }
         #search-btn {
             color: rgb(52, 120, 128);
@@ -109,10 +123,8 @@
             border-radius: 50%;
             background: rgb(247, 247, 247);
             border: none;
-            font-size: 16px;
-            display: flex;
             justify-content: center;
-            align-items: center;
+            text-align: center;
         }
         #body-top {
             margin-bottom: 40px;
@@ -122,6 +134,35 @@
         }
         #body-bottom {
             margin-top: 50px;
+        }
+        #recent-search {
+            font-family: "Lato", sans-serif;
+            font-weight: 400px;
+            font-style: normal;
+            font-size: 32px;
+            color: rgb(247, 247, 247)
+        }
+        .recent-search-title {
+            float: left;
+            margin-top: 16px;
+        }
+        .search-word-box {
+            float: left;
+            padding: 0 9px;
+            height: 25px;
+            line-height: 25px;
+            margin: 0;
+            border-radius: 3px;
+            border: 1px solid rgb(163, 173, 146);
+            background-color: rgb(163, 173, 146);
+            margin-right: 6px;
+            margin-bottom: 6px;
+            letter-spacing: -0.04em;
+        }
+        .search-word {
+            background-color: rgb(163, 173, 146);
+            color: rgb(247, 247, 247);
+            font-size: 16px;
         }
     </style>
 </head>
@@ -156,6 +197,15 @@
                 </li>
             </div>
         </div>
+    </div>
+    <div class="right_aside">
+        <div class="resent-search-title"><p id="recent-search">#Recent Search</p></div>
+        <form id="search-box" action="" method="get">
+            <i class="fa-solid fa-magnifying-glass" style="color: rgb(52, 120, 128); margin: 5px;"></i>
+        </form>
+        <ul class="search-word-box"><a class="search-word">#{{last_key1}}</a></ul>
+        <ul class="search-word-box"><a class="search-word">#{{last_key2}}</a></ul>
+        <ul class="search-word-box"><a class="search-word">#{{last_key3}}</a></ul>
     </div>
 </body>
 </html>

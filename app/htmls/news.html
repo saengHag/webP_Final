@@ -64,7 +64,7 @@
             text-align: left;
         }
         #header {
-            background-color: rgb(237, 222, 199);
+            background-color: rgb(217, 235, 210);
         }
         #input-logo {
             margin-left: 5px;
@@ -79,8 +79,14 @@
             -webkit-text-stroke-color: rgb(52, 120, 128);
             top: 0;
         }
+        #body-top {
+            margin-bottom: 20px;
+        }
         #body-middle {
-            margin-top: 20px;
+            margin-top: 30px;
+        }
+        #body-bottom {
+            margin-top: 50px;
         }
     </style>
 </head>
@@ -102,23 +108,21 @@
                 <h2>{{ title }}</h2>
                 <date>작성일자: {{ date }}</date>
             </div>
+            <hr style="border: solid 1px rgb(50, 50, 50);">
             <div id="body-middle">
                 {{ detail | safe }}
             </div>
             <div id="body-bottom">
-
+                <li>
+                    <a>기사 원문으로 이동하기: </a>
+                    <a href="{{ link }}" target="_blank">{{ title }}</a><br>
+                    <!--"_blank": 새 탭에서 링크 열기-->
+                    <!--Request URL: {{ request }}-->
+                    <!--{{ press }} - {{ date }}-->
+                </li>
             </div>
         </div>
         
-    </div>
-    <div class="article-container">
-        <li>
-            <a>기사 원문으로 이동하기: </a>
-            <a href="{{ link }}" target="_blank">{{ title }}</a><br>
-            <!--"_blank": 새 탭에서 링크 열기-->
-            <!--Request URL: {{ request }}-->
-            <!--{{ press }} - {{ date }}-->
-        </li>
     </div>
 </body>
 </html>

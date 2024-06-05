@@ -16,6 +16,7 @@ app.mount("/static", StaticFiles(directory="app"), name="static")       # 이미
 templates = Jinja2Templates(directory = "app/htmls")        #'htmls' 디렉토리 내의 html 코드를 참조
 
 def google_news_crawler(keyword):
+    
     # 구글 뉴스 검색 URL
     url = "https://news.google.com/search?q={}&hl=ko&gl=KR&ceid=KR%3Ako".format(keyword)      # URL 내에 query 변수명을 그대로 입력했더니 'query'라는 문자열을 검색한 결과가 나옴. 전에는 멀쩡했는데 왜 이러는지 모르겠음
 
@@ -67,16 +68,20 @@ def google_news_crawler(keyword):
 
             # 뉴스 사이트마다 html의 태그가 다르기 때문에 웹사이트에서 자주 사용하는 뉴스 본문 태그를 리스트로
             # 만들어서 본문이 리스트에 입력될 때까지 반복문을 돌리는 것으로 본문의 텍스트를 가져옴
-            tag_list = ['#container', '#wrap', '#news-wrap', '#article-view-content-div']
+            tag_list = ['#container', '#news-contents' '#wrap', '#news-wrap', '#article-view-content-div', '#content']
             
             # 기사 전문 추출
             news_main = []
             for i in tag_list:
                 print(i)
                 if news_main != []:
+                    print("입력 성공")
                     break
                 news_main = soup2.select(i)
-            # print(news_main)
+            print(news_main)
+            
+            #if news_main == []:
+            #    continue
             
             news_main_text = []
             for i in range(len(news_main)):
@@ -85,13 +90,16 @@ def google_news_crawler(keyword):
             final_news_detail = news_detail[0].split('.')[:-1]  # '.'기호를 기준으로 글씨를 싹 잘라서 news_detail의 마지막 인덱스만 제거
 
             news_detail_text_real_final_last = ""
-            for i in range(len(final_news_detail)):
-                news_detail_text_real_final_last = news_detail_text_real_final_last + final_news_detail[i]
+            news_detail_text_real_final_last = news_detail_text_real_final_last + final_news_detail[i]
+            for i in range(1, len(final_news_detail)):
+                news_detail_text_real_final_last = news_detail_text_real_final_last + "." + final_news_detail[i]
+            news_detail_text_real_final_last = news_detail_text_real_final_last + "."
 
             # 텍스트 확인용 코드
-            print(news_main_text)
+            #print(news_main_text)
             print(final_news_detail)        # 뉴스 기사 웹사이트를 그대로 크롤링하면 아래의 필요없는 부분까지 출력되는 이슈가 있었는데 보통 뉴스 기사의 끝에는 이메일이 온다는 특징을 이용했다
             print(news_detail_text_real_final_last)     #'@'기호를 기준으로 문자열을 자르고, 그 앞의 '.'기호를 기준으로 잘라서 이메일을 완전히 제거하는 것으로 깔끔한 본문을 가져옴
+            
             
 
             #ns = str(rmv_tag.text.replace(u'\xa0', u' ')).replace('\n', '<br>').replace('\r', '').replace("\'", "").replace("=", "").replace("광고", "")

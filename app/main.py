@@ -8,6 +8,7 @@ import requests
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup, Comment       # 웹에서 가져온 HTML코드를 파이썬에서 편하게 분석해주는 라이브러리
 
+
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="app"), name="static")       # 이미지 출력을 원활하게 하기 위한 명령어. app 디렉토리 안에서 탐색
@@ -64,6 +65,8 @@ def google_news_crawler(keyword):
 
             remove_comments(soup2)
 
+            # 뉴스 사이트마다 html의 태그가 다르기 때문에 웹사이트에서 자주 사용하는 뉴스 본문 태그를 리스트로
+            # 만들어서 본문이 리스트에 입력될 때까지 반복문을 돌리는 것으로 본문의 텍스트를 가져옴
             tag_list = ['#container', '#wrap', '#news-wrap', '#article-view-content-div']
             
             # 기사 전문 추출
@@ -73,13 +76,23 @@ def google_news_crawler(keyword):
                 if news_main != []:
                     break
                 news_main = soup2.select(i)
-            print(news_main)
+            # print(news_main)
             
             news_main_text = []
             for i in range(len(news_main)):
-                news_main_text.append(news_main[i].get_text(separator = ' ', strip = True))
+                news_main_text.append(news_main[i].get_text(separator = ' ', strip = True).replace("\'", "'"))
+            news_detail = news_main_text[0].split('@')[:1]      # 이메일 앞부분이 남음
+            final_news_detail = news_detail[0].split('.')[:-1]  # '.'기호를 기준으로 글씨를 싹 잘라서 news_detail의 마지막 인덱스만 제거
 
+            news_detail_text_real_final_last = ""
+            for i in range(len(final_news_detail)):
+                news_detail_text_real_final_last = news_detail_text_real_final_last + final_news_detail[i]
+
+            # 텍스트 확인용 코드
             print(news_main_text)
+            print(final_news_detail)        # 뉴스 기사 웹사이트를 그대로 크롤링하면 아래의 필요없는 부분까지 출력되는 이슈가 있었는데 보통 뉴스 기사의 끝에는 이메일이 온다는 특징을 이용했다
+            print(news_detail_text_real_final_last)     #'@'기호를 기준으로 문자열을 자르고, 그 앞의 '.'기호를 기준으로 잘라서 이메일을 완전히 제거하는 것으로 깔끔한 본문을 가져옴
+            
 
             #ns = str(rmv_tag.text.replace(u'\xa0', u' ')).replace('\n', '<br>').replace('\r', '').replace("\'", "").replace("=", "").replace("광고", "")
             #   print(type(ns[0]))      # ns의 타입 확인: str
@@ -157,7 +170,7 @@ def google_news_crawler(keyword):
     else:
         print("HTTP 요청 실패")
 
-    return ( press, title, formatted_time, "https://news.google.com"+link, news_main_text )       
+    return ( press, title, formatted_time, "https://news.google.com"+link, news_detail_text_real_final_last )      
 # press, title, formatted_time, "https://news.google.com"+link
 
 @app.get("/")

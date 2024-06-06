@@ -139,7 +139,7 @@ def print_news(request: Request, keyword: str = Form(...)):
         last_keyword.insert(0, keyword)     # 최근 검색어 리스트 맨앞에 keyword 추가
     print(last_keyword)
     press, title, date, link, detail = google_news_crawler(keyword)
-    return templates.TemplateResponse("news.html", { "request": request, "keyword": keyword, "press": press, "title": title, "date": date, "link": link, "detail": detail, "last_key1": last_keyword[0], "last_key2": last_keyword[1], "last_key3": last_keyword[2] })
+    return templates.TemplateResponse("news.html", { "request": request, "keyword": keyword, "press": press, "title": title, "date": date, "link": link, "detail": detail, "last_key1": last_keyword[0], "last_key2": last_keyword[1], "last_key3": last_keyword[2], "last_key4": last_keyword[3] })
 # "언론사": press, "제목": title, "작성일자": time, "링크": link
 
 
